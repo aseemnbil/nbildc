@@ -111,13 +111,18 @@ function PartyFields({ prefix, data, onChange, dark }) {
     { key: 'name',    label: 'Name',       icon: User,      placeholder: 'Full name' },
     { key: 'company', label: 'Company',    icon: Building2, placeholder: 'Company / Firm name' },
     { key: 'address', label: 'Address',    icon: MapPin,    placeholder: 'Street address', multiline: true },
-    { key: 'pincode', label: 'Pincode',    icon: Hash,      placeholder: '560001' },
+    { key: 'pincode', label: 'Pincode',    icon: Hash,      placeholder: '560001', type: 'number', inputMode: 'numeric' },
     { key: 'mobile',  label: 'Mobile No.', icon: Phone,     placeholder: '+91 98765 43210' },
     { key: 'gst',     label: 'GST No.',    icon: FileText,  placeholder: '29XXXXX0000X1ZX' },
   ]
   const taClass = dark
     ? 'w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-colors resize-none'
     : 'w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 transition-colors resize-none shadow-sm'
+
+  const handlePincodeChange = (e) => {
+    const value = e.target.value.replace(/[^0-9]/g, '')
+    onChange(prefix, 'pincode', value)
+  }
 
   return (
     <div className="grid grid-cols-1 gap-3">
@@ -126,7 +131,9 @@ function PartyFields({ prefix, data, onChange, dark }) {
           <Label dark={dark}>{f.label}</Label>
           {f.multiline
             ? <textarea rows={2} value={data[f.key] || ''} onChange={e => onChange(prefix, f.key, e.target.value)} placeholder={f.placeholder} className={taClass} />
-            : <Input dark={dark} value={data[f.key] || ''} onChange={e => onChange(prefix, f.key, e.target.value)} placeholder={f.placeholder} />
+            : f.key === 'pincode'
+            ? <Input dark={dark} type="text" inputMode="numeric" value={data[f.key] || ''} onChange={handlePincodeChange} placeholder={f.placeholder} maxLength="6" />
+            : <Input dark={dark} type={f.type || 'text'} inputMode={f.inputMode} value={data[f.key] || ''} onChange={e => onChange(prefix, f.key, e.target.value)} placeholder={f.placeholder} />
           }
         </div>
       ))}
@@ -246,7 +253,7 @@ function ChallanPreview({ form }) {
 
 // ─── Main App ─────────────────────────────────────────────────────────────────
 export default function App() {
-  const [dark, setDark] = useState(true)
+  const [dark, setDark] = useState(false)
   const [form, setForm] = useState({
     dcNumber: `NBIL/2026/${String(Math.floor(Math.random() * 9000) + 1000).padStart(4,'0')}`,
     date: fmtDate(today),
@@ -358,7 +365,16 @@ export default function App() {
               </div>
               <div>
                 <Label dark={dark} required>Date</Label>
-                <Input dark={dark} value={form.date} onChange={e => setField('date', e.target.value)} placeholder="DD/MM/YYYY" />
+                <input
+                  type="date"
+                  value={form.date ? new Date(form.date.split('/').reverse().join('-')).toISOString().split('T')[0] : ''}
+                  onChange={e => setField('date', e.target.value ? new Date(e.target.value).toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '')}
+                  className={`w-full rounded-lg px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-1
+                    ${dark
+                      ? 'bg-slate-800/60 border border-slate-700 text-slate-100 placeholder:text-slate-600 focus:border-blue-500 focus:ring-blue-500/30'
+                      : 'bg-white border border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20 shadow-sm'
+                    }`}
+                />
               </div>
             </div>
           </SectionCard>
@@ -396,11 +412,31 @@ export default function App() {
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <Label dark={dark}>Quantity</Label>
-                      <Input dark={dark} value={row.quantity} onChange={e => updateRow(row.id, 'quantity', e.target.value)} placeholder="e.g. 5 pcs" />
+                      <Input
+                        dark={dark}
+                        type="text"
+                        inputMode="numeric"
+                        value={row.quantity}
+                        onChange={e => {
+                          const value = e.target.value.replace(/[^0-9.]/g, '')
+                          updateRow(row.id, 'quantity', value)
+                        }}
+                        placeholder="e.g. 5"
+                      />
                     </div>
                     <div>
                       <Label dark={dark}>Approx. Value</Label>
-                      <Input dark={dark} value={row.value} onChange={e => updateRow(row.id, 'value', e.target.value)} placeholder="₹ 0.00" />
+                      <Input
+                        dark={dark}
+                        type="text"
+                        inputMode="numeric"
+                        value={row.value}
+                        onChange={e => {
+                          const value = e.target.value.replace(/[^0-9.]/g, '')
+                          updateRow(row.id, 'value', value)
+                        }}
+                        placeholder="₹ 0.00"
+                      />
                     </div>
                   </div>
                   <div>
