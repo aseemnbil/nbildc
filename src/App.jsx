@@ -148,7 +148,7 @@ function ChallanPreview({ form }) {
       <div className="flex items-center justify-between border-b-2 border-black pb-3 mb-3">
         {/* Logo image top-left */}
         <img
-          src="nbillogotrans.png"
+          src="/nbillogotrans.png"
           alt="NBIL Logo"
           className="h-12 w-auto object-contain"
         />
