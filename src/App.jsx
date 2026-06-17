@@ -15,33 +15,15 @@ const NBIL_ADDRESS = 'No.22, 16th Cross, 5th Phase, J.P.Nagar, Bengaluru – 560
 const NBIL_GSTIN   = '29AAFCN2192L1Z0'
 
 // ─── NBIL Logo SVG ────────────────────────────────────────────────────────────
-function NBILLogo({ dark = false }) {
-  // Recreates the hexagon-cluster icon + "nbil" wordmark
+function NBILLogo() {
   return (
-    <svg viewBox="0 0 220 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-9 w-auto">
-      {/* ── Icon: three interlocked hex-like shapes ── */}
-      {/* Blue top hex */}
-      <path d="M28 6 L38 11.5 L38 22.5 L28 28 L18 22.5 L18 11.5 Z" fill="#3B4FC8"/>
-      {/* Yellow left hex */}
-      <path d="M16 24 L26 29.5 L26 40.5 L16 46 L6  40.5 L6  29.5 Z" fill="#F5A623"/>
-      {/* Pink/magenta bottom-right hex */}
-      <path d="M40 24 L50 29.5 L50 40.5 L40 46 L30 40.5 L30 29.5 Z" fill="#C8186A"/>
-      {/* Center connector dot */}
-      <circle cx="28" cy="28" r="5" fill="#3B4FC8" opacity="0.85"/>
-
-      {/* ── Wordmark: "nbil" ── */}
-      <text
-        x="62" y="42"
-        fontFamily="Inter, Arial, sans-serif"
-        fontWeight="800"
-        fontSize="28"
-        letterSpacing="-0.5"
-        fill={dark ? '#FFFFFF' : '#111827'}
-      >nbil</text>
-    </svg>
+    <img
+      src="/nbillogotrans.png"
+      alt="NBIL Logo"
+      className="h-9 w-auto"
+    />
   )
 }
-
 // ─── theme-aware primitives ───────────────────────────────────────────────────
 function Label({ children, required, dark }) {
   return (
