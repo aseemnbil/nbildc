@@ -30,3 +30,39 @@ body {
     padding: 20mm !important;
   }
 }
+
+@media print {
+  /* Hide everything by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Show only the print area and its children */
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  /* Pull the print area out to the top-left of the page */
+  .print-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  /* Explicitly hide anything marked no-print (sidebar, header, buttons, etc.) */
+  .no-print {
+    display: none !important;
+  }
+
+  /* Remove browser-added margin space (this is where Chrome puts its header/footer) */
+  @page {
+    margin: 0.4in;
+  }
+
+  /* Avoid odd page-break artifacts inside the table */
+  table {
+    page-break-inside: avoid;
+  }
+}
